@@ -1,3 +1,6 @@
 # Agent and IDE skill folders
 .agents/
 .cursor/
+
+# Ignore docs
+docs/
