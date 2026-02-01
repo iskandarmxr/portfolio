@@ -1,0 +1,121 @@
+# ===========================================
+# Portfolio Application - Docker Compose
+# ===========================================
+# Architecture: Separated Frontend (Nginx static) + Backend (Rails API/Admin)
+#
+# Quick Start (no .env file needed!):
+#   docker-compose up --build
+#   docker-compose exec backend rails db:create db:migrate db:seed
+#   Open http://localhost:8080
+#   Admin: http://localhost:8080/admin (admin@example.com / password123)
+
+services:
+  # ============================================
+  # FRONTEND - Static HTML/CSS/JS served by Nginx
+  # ============================================
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    volumes:
+      - ./frontend/public:/usr/share/nginx/html:ro
+      - ./frontend/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - portfolio_network
+
+  # ============================================
+  # BACKEND - Rails API + Admin Panel
+  # ============================================
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - backend_storage:/app/storage
+    environment:
+      # Database (uses default password below)
+      - DATABASE_URL=postgres://portfolio:${DB_PASSWORD:-portfoliodev123}@postgres:5432/portfolio_dev
+      # Redis
+      - REDIS_URL=redis://redis:6379/0
+      # Rails
+      - RAILS_ENV=${RAILS_ENV:-development}
+      - SECRET_KEY_BASE=${SECRET_KEY_BASE:-devsecretneedstobeatleast64characterslong1234567890abcdefghijklmnop}
+      # CORS
+      - FRONTEND_URL=${FRONTEND_URL:-http://localhost:8080}
+      # Active Storage host (for generating correct URLs)
+      - RAILS_HOST=${RAILS_HOST:-localhost:8080}
+      # Admin credentials (seeded on first run)
+      - ADMIN_EMAIL=${ADMIN_EMAIL:-admin@example.com}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-password123}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - portfolio_network
+
+  # ============================================
+  # DATABASE - PostgreSQL 16
+  # ============================================
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_USER=portfolio
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-portfoliodev123}
+      - POSTGRES_DB=portfolio_dev
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U portfolio -d portfolio_dev"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - portfolio_network
+
+  # ============================================
+  # CACHE/PUBSUB - Redis for ActionCable
+  # ============================================
+  redis:
+    image: redis:7-alpine
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - portfolio_network
+
+volumes:
+  postgres_data:
+  redis_data:
+  backend_storage:
+
+networks:
+  portfolio_network:
+    driver: bridge

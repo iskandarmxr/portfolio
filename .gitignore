@@ -1,6 +1,57 @@
-# Agent and IDE skill folders
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+log/
+
+# Temp files
+tmp/
+.tmp/
+
+# Dependencies
+node_modules/
+vendor/bundle/
+
+# Skills
 .agents/
 .cursor/
 
-# Ignore docs
+# Rails
+backend/tmp/
+backend/log/
+backend/storage/
+backend/.bundle/
+backend/public/assets/
+backend/public/packs/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+*.pid
+
+# Secrets
+*.pem
+*.key
+credentials.yml.enc
+
+# Plan Documentation
 docs/
+
+# Coverage
+coverage/
+
+# Database
+*.sqlite3
+*.sqlite3-*

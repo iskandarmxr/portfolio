@@ -1,0 +1,73 @@
+<%# Admin Messages List %>
+<% content_for :title, "Messages" %>
+
+<div class="page-header">
+  <div class="header-left">
+    <h1>Messages</h1>
+    <p class="page-subtitle"><%= Message.unread.count %> unread</p>
+  </div>
+  <div class="header-actions">
+    <% if Message.unread.any? %>
+      <%= button_to mark_all_read_admin_messages_path, method: :patch, class: "btn-outline" do %>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9 11 12 14 22 4"/>
+          <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+        </svg>
+        <span>Mark all read</span>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+
+<!-- Filters -->
+<div class="filters-bar glass-card">
+  <a href="<%= admin_messages_path %>" class="filter-btn <%= 'active' unless params[:filter] %>">All</a>
+  <a href="<%= admin_messages_path(filter: 'unread') %>" class="filter-btn <%= 'active' if params[:filter] == 'unread' %>">
+    Unread
+    <% if (count = Message.unread.count) > 0 %>
+      <span class="filter-badge"><%= count %></span>
+    <% end %>
+  </a>
+  <a href="<%= admin_messages_path(filter: 'archived') %>" class="filter-btn <%= 'active' if params[:filter] == 'archived' %>">Archived</a>
+</div>
+
+<!-- Messages List -->
+<div class="messages-inbox glass-card">
+  <% if @messages.any? %>
+    <ul class="inbox-list">
+      <% @messages.each do |message| %>
+        <li class="inbox-item <%= 'unread' unless message.read? %>">
+          <a href="<%= admin_message_path(message) %>" class="inbox-link">
+            <div class="inbox-avatar">
+              <%= message.name[0].upcase %>
+            </div>
+            <div class="inbox-content">
+              <div class="inbox-header">
+                <span class="inbox-sender"><%= message.name %></span>
+                <span class="inbox-date"><%= message.short_date %></span>
+              </div>
+              <% if message.subject.present? %>
+                <span class="inbox-subject"><%= message.subject %></span>
+              <% end %>
+              <p class="inbox-preview"><%= message.preview %></p>
+              <% if message.project_type.present? %>
+                <span class="inbox-type"><%= message.project_type.titleize %></span>
+              <% end %>
+            </div>
+            <% unless message.read? %>
+              <span class="unread-dot"></span>
+            <% end %>
+          </a>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <div class="empty-inbox">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+        <polyline points="22,6 12,13 2,6"/>
+      </svg>
+      <p>No messages found</p>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,19 @@
+<%# Search Results Fragment %>
+<div class="search-results">
+  <% if @posts.any? %>
+    <% @posts.each do |post| %>
+      <a href="/blog/<%= post.slug %>" class="search-result-item"
+         hx-get="/fragments/posts/<%= post.slug %>"
+         hx-target="#post-content"
+         hx-push-url="/blog/<%= post.slug %>">
+        <h4><%= post.title %></h4>
+        <p><%= truncate(post.excerpt || post.content, length: 100) %></p>
+        <span class="date"><%= post.formatted_date %></span>
+      </a>
+    <% end %>
+  <% else %>
+    <div class="no-results">
+      <p>No posts found matching your search.</p>
+    </div>
+  <% end %>
+</div>

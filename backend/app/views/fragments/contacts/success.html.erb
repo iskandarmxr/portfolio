@@ -1,0 +1,14 @@
+<%# Contact Success Fragment %>
+<div class="contact-success">
+  <div class="success-icon">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+      <polyline points="22 4 12 14.01 9 11.01"/>
+    </svg>
+  </div>
+  <h3>Message Sent!</h3>
+  <p>Thank you for reaching out. I'll get back to you as soon as possible.</p>
+  <button class="btn-outline" onclick="document.getElementById('contact-form').reset(); this.closest('.contact-success').outerHTML = document.getElementById('contact-form-template').innerHTML;">
+    Send Another Message
+  </button>
+</div>

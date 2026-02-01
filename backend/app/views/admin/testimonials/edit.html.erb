@@ -1,0 +1,17 @@
+<%# Edit Testimonial %>
+<% content_for :title, "Edit Testimonial" %>
+
+<div class="page-header">
+  <div class="header-left">
+    <a href="<%= admin_testimonials_path %>" class="back-link">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M19 12H5M12 19l-7-7 7-7"/>
+      </svg>
+      Back to Testimonials
+    </a>
+    <h1>Edit Testimonial</h1>
+    <p class="page-subtitle">From <%= @testimonial.author_name %></p>
+  </div>
+</div>
+
+<%= render "form" %>

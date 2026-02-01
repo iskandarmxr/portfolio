@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title><%= content_for?(:title) ? "#{yield(:title)} | " : "" %>Admin Panel</title>
+  
+  <!-- Theme initialization (prevents flash) -->
+  <script>
+    (function() {
+      var theme = localStorage.getItem('portfolio-admin-theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lucide-static@latest/font/lucide.min.css">
+  
+  <%= stylesheet_link_tag "admin", "data-turbo-track": "reload" %>
+  <%= javascript_importmap_tags %>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+</head>
+<body class="admin-body">
+  <% if admin_signed_in? %>
+    <!-- Sidebar -->
+    <aside class="admin-sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <a href="<%= admin_root_path %>" class="sidebar-logo">
+          <span class="logo-icon">P</span>
+          <span class="logo-text">Portfolio</span>
+        </a>
+        <button class="sidebar-toggle" id="sidebar-toggle">
+          <i class="lucide-panel-left-close"></i>
+        </button>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <ul class="nav-list">
+          <li class="nav-item">
+            <a href="<%= admin_root_path %>" class="nav-link <%= 'active' if controller_name == 'dashboard' %>">
+              <i class="lucide-layout-dashboard"></i>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          
+          <li class="nav-section">Content</li>
+          
+          <li class="nav-item">
+            <a href="<%= admin_projects_path %>" class="nav-link <%= 'active' if controller_name == 'projects' %>">
+              <i class="lucide-folder-kanban"></i>
+              <span>Projects</span>
+            </a>
+          </li>
+          
+          <li class="nav-item">
+            <a href="<%= admin_posts_path %>" class="nav-link <%= 'active' if controller_name == 'posts' %>">
+              <i class="lucide-file-text"></i>
+              <span>Blog Posts</span>
+              <% if (draft_count = Post.draft.count) > 0 %>
+                <span class="nav-badge"><%= draft_count %></span>
+              <% end %>
+            </a>
+          </li>
+          
+          <li class="nav-item">
+            <a href="<%= admin_messages_path %>" class="nav-link <%= 'active' if controller_name == 'messages' %>">
+              <i class="lucide-mail"></i>
+              <span>Messages</span>
+              <% if (unread_count = Message.unread.count) > 0 %>
+                <span class="nav-badge alert"><%= unread_count %></span>
+              <% end %>
+            </a>
+          </li>
+          
+          <li class="nav-section">Portfolio</li>
+          
+          <li class="nav-item">
+            <a href="<%= admin_skills_path %>" class="nav-link <%= 'active' if controller_name == 'skills' %>">
+              <i class="lucide-code-2"></i>
+              <span>Skills</span>
+            </a>
+          </li>
+          
+          <li class="nav-item">
+            <a href="<%= admin_experiences_path %>" class="nav-link <%= 'active' if controller_name == 'experiences' %>">
+              <i class="lucide-briefcase"></i>
+              <span>Experience</span>
+            </a>
+          </li>
+          
+          <li class="nav-item">
+            <a href="<%= admin_testimonials_path %>" class="nav-link <%= 'active' if controller_name == 'testimonials' %>">
+              <i class="lucide-quote"></i>
+              <span>Testimonials</span>
+            </a>
+          </li>
+          
+          <li class="nav-section">System</li>
+          
+          <li class="nav-item">
+            <a href="<%= admin_settings_path %>" class="nav-link <%= 'active' if controller_name == 'settings' %>">
+              <i class="lucide-settings"></i>
+              <span>Settings</span>
+            </a>
+          </li>
+          
+          <li class="nav-item">
+            <a href="<%= admin_analytics_path %>" class="nav-link <%= 'active' if controller_name == 'analytics' %>">
+              <i class="lucide-bar-chart-3"></i>
+              <span>Analytics</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      
+      <div class="sidebar-footer">
+        <div class="admin-user">
+          <div class="user-avatar"><%= current_admin.name[0].upcase %></div>
+          <div class="user-info">
+            <span class="user-name"><%= current_admin.name %></span>
+            <span class="user-email"><%= current_admin.email %></span>
+          </div>
+        </div>
+        <%= button_to logout_path, method: :delete, class: "logout-btn", data: { confirm: "Are you sure?" } do %>
+          <i class="lucide-log-out"></i>
+          <span>Logout</span>
+        <% end %>
+      </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="admin-main">
+      <!-- Top Header -->
+      <header class="admin-header">
+        <button class="mobile-menu-toggle" id="mobile-menu-toggle">
+          <i class="lucide-menu"></i>
+        </button>
+        
+        <div class="header-search">
+          <i class="lucide-search"></i>
+          <input type="text" placeholder="Search..." class="search-input">
+        </div>
+        
+        <div class="header-actions">
+          <a href="/" target="_blank" class="header-btn" title="View Site">
+            <i class="lucide-external-link"></i>
+          </a>
+          <button class="header-btn notification-btn" title="Notifications">
+            <i class="lucide-bell"></i>
+            <% if Message.unread.count > 0 %>
+              <span class="notification-dot"></span>
+            <% end %>
+          </button>
+        </div>
+      </header>
+      
+      <!-- Flash Messages -->
+      <% if notice %>
+        <div class="flash flash-notice">
+          <i class="lucide-check-circle"></i>
+          <span><%= notice %></span>
+          <button class="flash-close" onclick="this.parentElement.remove()">
+            <i class="lucide-x"></i>
+          </button>
+        </div>
+      <% end %>
+      
+      <% if alert %>
+        <div class="flash flash-alert">
+          <i class="lucide-alert-circle"></i>
+          <span><%= alert %></span>
+          <button class="flash-close" onclick="this.parentElement.remove()">
+            <i class="lucide-x"></i>
+          </button>
+        </div>
+      <% end %>
+      
+      <!-- Page Content -->
+      <div class="admin-content">
+        <%= yield %>
+      </div>
+    </main>
+  <% else %>
+    <!-- Login Page (no sidebar) -->
+    <main class="admin-login-page">
+      <%= yield %>
+    </main>
+  <% end %>
+  
+  <script>
+    // Sidebar toggle
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggle = document.getElementById('sidebar-toggle');
+    const mobileToggle = document.getElementById('mobile-menu-toggle');
+    
+    if (sidebarToggle) {
+      sidebarToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('collapsed');
+        localStorage.setItem('sidebar-collapsed', sidebar.classList.contains('collapsed'));
+      });
+      
+      // Restore state
+      if (localStorage.getItem('sidebar-collapsed') === 'true') {
+        sidebar.classList.add('collapsed');
+      }
+    }
+    
+    if (mobileToggle) {
+      mobileToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('mobile-open');
+      });
+    }
+  </script>
+</body>
+</html>

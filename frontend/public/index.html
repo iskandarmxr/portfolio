@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Full-Stack Developer Portfolio - Building amazing web experiences with modern technologies.">
+  <meta name="theme-color" content="#000000">
+  
+  <title>Portfolio | Full-Stack Developer</title>
+  
+  <!-- Theme initialization (prevents flash) -->
+  <script>
+    (function() {
+      var theme = localStorage.getItem('portfolio-frontend-theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="/assets/css/main.css">
+  
+  <!-- HTMX -->
+  <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+</head>
+<body>
+  <!-- Loading Screen -->
+  <div class="loading-screen" id="loading-screen">
+    <div class="loading-icon"></div>
+    <p class="loading-text">Loading...</p>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <a href="/" class="nav-logo">
+      <span class="nav-logo-icon">P</span>
+      <span>Portfolio</span>
+    </a>
+    
+    <div class="nav-links">
+      <a href="/" class="nav-link active">Home</a>
+      <a href="/projects" class="nav-link">Projects</a>
+      <a href="/about" class="nav-link">About</a>
+      <a href="/blog" class="nav-link">Blog</a>
+    </div>
+    
+    <a href="/contact" class="nav-cta">Let's Talk</a>
+    
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </button>
+  </nav>
+
+  <main class="main-content">
+    <!-- Hero Section -->
+    <section class="hero section">
+      <div class="container">
+        <div id="hero-content" 
+             hx-get="/fragments/hero" 
+             hx-trigger="load, content-refresh-settings from:body"
+             hx-indicator="#hero-loading">
+          <!-- Loading skeleton -->
+          <div class="hero-content">
+            <div class="hero-text">
+              <div class="skeleton skeleton-text" style="width: 120px; height: 1rem;"></div>
+              <div class="skeleton" style="width: 80%; height: 6rem; margin: 1rem 0;"></div>
+              <div class="skeleton skeleton-text" style="width: 60%;"></div>
+              <div class="skeleton skeleton-text" style="width: 50%;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Marquee -->
+    <div class="marquee">
+      <div class="marquee-content">
+        <span>Developer</span>
+        <span>•</span>
+        <span>Designer</span>
+        <span>•</span>
+        <span>Creator</span>
+        <span>•</span>
+        <span>Developer</span>
+        <span>•</span>
+        <span>Designer</span>
+        <span>•</span>
+        <span>Creator</span>
+        <span>•</span>
+      </div>
+    </div>
+
+    <!-- Featured Projects Section -->
+    <section class="section projects-section" id="projects">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="section-number">001</span>
+            <span class="heading-3">Featured Projects</span>
+          </h2>
+          <a href="/projects" class="btn-outline">
+            View All
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </a>
+        </div>
+        
+        <div id="featured-projects"
+             hx-get="/fragments/projects/featured"
+             hx-trigger="load, content-refresh-project from:body"
+             hx-indicator="#projects-loading">
+          <!-- Loading skeleton -->
+          <div class="projects-grid">
+            <div class="skeleton skeleton-card"></div>
+            <div class="skeleton skeleton-card"></div>
+            <div class="skeleton skeleton-card"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section class="section" id="skills">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="section-number">002</span>
+            <span class="heading-3">Skills & Technologies</span>
+          </h2>
+        </div>
+        
+        <div id="skills-content"
+             hx-get="/fragments/skills"
+             hx-trigger="load, content-refresh-skill from:body"
+             hx-indicator="#skills-loading">
+          <!-- Loading skeleton -->
+          <div class="skills-grid">
+            <div class="skeleton" style="height: 80px;"></div>
+            <div class="skeleton" style="height: 80px;"></div>
+            <div class="skeleton" style="height: 80px;"></div>
+            <div class="skeleton" style="height: 80px;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="section" id="testimonials" style="background: var(--bg-elevated);">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="section-number">003</span>
+            <span class="heading-3">Testimonials</span>
+          </h2>
+        </div>
+        
+        <div id="testimonials-content"
+             hx-get="/fragments/testimonials"
+             hx-trigger="load, content-refresh-testimonial from:body"
+             hx-indicator="#testimonials-loading">
+          <!-- Loading skeleton -->
+          <div class="testimonials-grid">
+            <div class="skeleton" style="height: 200px;"></div>
+            <div class="skeleton" style="height: 200px;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Project Modal -->
+  <div id="project-modal" class="modal"></div>
+
+  <!-- Footer Bar -->
+  <div class="footer-bar">
+    <div class="footer-left">
+      <div class="footer-status">
+        <span class="status-dot"></span>
+        <span>Open to work</span>
+      </div>
+      <a href="/contact" class="footer-cta">Schedule a Call</a>
+    </div>
+    <div class="footer-right">
+      <span id="project-count">Loading...</span> projects completed
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/assets/js/app.js"></script>
+  <script>
+    // Hide loading screen when page is ready
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('loading-screen').classList.add('hidden');
+      }, 500);
+    });
+    
+    // Mobile nav toggle
+    document.getElementById('nav-toggle')?.addEventListener('click', () => {
+      document.getElementById('navbar').classList.toggle('mobile-open');
+    });
+  </script>
+</body>
+</html>

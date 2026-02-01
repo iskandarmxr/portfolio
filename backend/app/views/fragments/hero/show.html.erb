@@ -1,0 +1,51 @@
+<%# Hero Section Fragment %>
+<div class="hero-content">
+  <div class="hero-text">
+    <span class="hero-greeting">Hello, I'm</span>
+    <h1 class="hero-name"><%= @settings[:name] %></h1>
+    <p class="hero-tagline"><%= @settings[:tagline] %></p>
+    <p class="hero-bio"><%= @settings[:bio] %></p>
+    
+    <div class="hero-actions">
+      <a href="/projects" class="btn-accent">
+        <span>View Projects</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </a>
+      <a href="/contact" class="btn-outline">
+        <span>Get in Touch</span>
+      </a>
+    </div>
+  </div>
+  
+  <div class="hero-sidebar">
+    <div class="hero-panel glass-card">
+      <span class="panel-label">What I do</span>
+      <ul class="services-list">
+        <li>Web Development</li>
+        <li>Full-Stack Applications</li>
+        <li>API Design</li>
+        <li>Database Architecture</li>
+      </ul>
+    </div>
+    
+    <div class="hero-stats">
+      <div class="stat-item">
+        <span class="stat-value"><%= @project_count %></span>
+        <span class="stat-label">Projects</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value" id="visitor-count"><%= @visitor_count %></span>
+        <span class="stat-label">Visitors Today</span>
+      </div>
+    </div>
+    
+    <% if @settings[:available] %>
+      <div class="availability-badge">
+        <span class="status-dot"></span>
+        <span>Available for work</span>
+      </div>
+    <% end %>
+  </div>
+</div>

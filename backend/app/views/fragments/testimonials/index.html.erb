@@ -1,0 +1,55 @@
+<%# Testimonials Section Fragment %>
+<div class="testimonials-grid">
+  <% @testimonials.each do |testimonial| %>
+    <div class="testimonial-card glass-card">
+      <div class="testimonial-header">
+        <% if testimonial.author_image.present? %>
+          <img src="<%= testimonial.author_image %>" alt="<%= testimonial.author_name %>" class="author-avatar">
+        <% else %>
+          <div class="author-avatar placeholder">
+            <%= testimonial.author_name[0].upcase %>
+          </div>
+        <% end %>
+        
+        <div class="author-info">
+          <span class="author-name"><%= testimonial.author_name %></span>
+          <% if testimonial.author_title.present? || testimonial.author_company.present? %>
+            <span class="author-role">
+              <%= [testimonial.author_title, testimonial.author_company].compact.join(' at ') %>
+            </span>
+          <% end %>
+        </div>
+        
+        <% if testimonial.featured? %>
+          <span class="featured-indicator" title="Featured">★</span>
+        <% end %>
+      </div>
+      
+      <blockquote class="testimonial-content">
+        <svg class="quote-icon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" opacity="0.2">
+          <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+        </svg>
+        <p><%= testimonial.content %></p>
+      </blockquote>
+      
+      <div class="testimonial-footer">
+        <div class="rating" title="<%= testimonial.rating %> out of 5 stars">
+          <% 5.times do |i| %>
+            <svg class="star <%= 'filled' if i < testimonial.rating %>" width="16" height="16" viewBox="0 0 24 24" fill="<%= i < testimonial.rating ? 'currentColor' : 'none' %>" stroke="currentColor" stroke-width="2">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<% if @testimonials.empty? %>
+  <div class="empty-state">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+    </svg>
+    <p>No testimonials yet</p>
+  </div>
+<% end %>

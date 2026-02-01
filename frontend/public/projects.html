@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="My Projects - A collection of web applications, tools, and experiments.">
+  <meta name="theme-color" content="#000000">
+  
+  <title>Projects | Portfolio</title>
+  
+  <!-- Theme initialization (prevents flash) -->
+  <script>
+    (function() {
+      var theme = localStorage.getItem('portfolio-frontend-theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="/assets/css/main.css">
+  
+  <!-- HTMX -->
+  <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <a href="/" class="nav-logo">
+      <span class="nav-logo-icon">P</span>
+      <span>Portfolio</span>
+    </a>
+    
+    <div class="nav-links">
+      <a href="/" class="nav-link">Home</a>
+      <a href="/projects" class="nav-link active">Projects</a>
+      <a href="/about" class="nav-link">About</a>
+      <a href="/blog" class="nav-link">Blog</a>
+    </div>
+    
+    <a href="/contact" class="nav-cta">Let's Talk</a>
+    
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </button>
+  </nav>
+
+  <main class="main-content">
+    <!-- Page Hero -->
+    <section class="page-hero">
+      <div class="container">
+        <h1 class="heading-1">My Projects</h1>
+        <p>A collection of web applications, tools, and experiments I've built.</p>
+      </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section class="section">
+      <div class="container">
+        <!-- Filter Buttons -->
+        <div class="filter-bar" style="margin-bottom: 2rem;">
+          <button class="filter-btn active"
+                  hx-get="/fragments/projects"
+                  hx-target="#projects-container"
+                  onclick="setActiveFilter(this)">All</button>
+          <button class="filter-btn"
+                  hx-get="/fragments/projects/filter/rails"
+                  hx-target="#projects-container"
+                  onclick="setActiveFilter(this)">Rails</button>
+          <button class="filter-btn"
+                  hx-get="/fragments/projects/filter/react"
+                  hx-target="#projects-container"
+                  onclick="setActiveFilter(this)">React</button>
+          <button class="filter-btn"
+                  hx-get="/fragments/projects/filter/javascript"
+                  hx-target="#projects-container"
+                  onclick="setActiveFilter(this)">JavaScript</button>
+          <button class="filter-btn"
+                  hx-get="/fragments/projects/filter/python"
+                  hx-target="#projects-container"
+                  onclick="setActiveFilter(this)">Python</button>
+        </div>
+
+        <!-- Projects Container -->
+        <div id="projects-container"
+             hx-get="/fragments/projects"
+             hx-trigger="load, content-refresh-project from:body"
+             hx-indicator="#loading">
+          <!-- Loading skeleton -->
+          <div class="projects-grid">
+            <div class="skeleton skeleton-card"></div>
+            <div class="skeleton skeleton-card"></div>
+            <div class="skeleton skeleton-card"></div>
+            <div class="skeleton skeleton-card"></div>
+            <div class="skeleton skeleton-card"></div>
+            <div class="skeleton skeleton-card"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Project Modal -->
+  <div id="project-modal" class="modal"></div>
+
+  <!-- Footer Bar -->
+  <div class="footer-bar">
+    <div class="footer-left">
+      <div class="footer-status">
+        <span class="status-dot"></span>
+        <span>Open to work</span>
+      </div>
+      <a href="/contact" class="footer-cta">Schedule a Call</a>
+    </div>
+    <div class="footer-right">
+      Building the future, one project at a time
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/assets/js/app.js"></script>
+  <script>
+    function setActiveFilter(btn) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+    
+    // Mobile nav toggle
+    document.getElementById('nav-toggle')?.addEventListener('click', () => {
+      document.getElementById('navbar').classList.toggle('mobile-open');
+    });
+  </script>
+</body>
+</html>

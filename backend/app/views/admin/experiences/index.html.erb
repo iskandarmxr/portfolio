@@ -1,0 +1,82 @@
+<%# Admin Experiences List %>
+<% content_for :title, "Experience" %>
+
+<div class="page-header">
+  <div class="header-left">
+    <h1>Experience</h1>
+    <p class="page-subtitle"><%= @experiences.count %> positions</p>
+  </div>
+  <div class="header-actions">
+    <a href="<%= new_admin_experience_path %>" class="btn-accent">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 5v14M5 12h14"/>
+      </svg>
+      <span>Add Experience</span>
+    </a>
+  </div>
+</div>
+
+<% if @experiences.any? %>
+  <div class="glass-card data-table">
+    <table>
+      <thead>
+        <tr>
+          <th class="col-drag"></th>
+          <th>Company</th>
+          <th>Role</th>
+          <th>Period</th>
+          <th>Duration</th>
+          <th class="col-actions">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="sortable-list">
+        <% @experiences.each do |experience| %>
+          <tr data-id="<%= experience.id %>">
+            <td class="col-drag">
+              <span class="drag-handle">⋮⋮</span>
+            </td>
+            <td>
+              <strong><%= experience.company %></strong>
+              <% if experience.location.present? %>
+                <span class="cell-subtitle"><%= experience.location %></span>
+              <% end %>
+            </td>
+            <td><%= experience.role %></td>
+            <td>
+              <%= experience.date_range %>
+              <% if experience.current? %>
+                <span class="status-badge published">Current</span>
+              <% end %>
+            </td>
+            <td><%= experience.duration %></td>
+            <td class="col-actions">
+              <div class="action-buttons">
+                <a href="<%= edit_admin_experience_path(experience) %>" class="action-btn" title="Edit">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                  </svg>
+                </a>
+                <%= button_to admin_experience_path(experience), method: :delete, class: "action-btn danger", data: { confirm: "Delete this experience?" } do %>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"/>
+                    <line x1="6" y1="6" x2="18" y2="18"/>
+                  </svg>
+                <% end %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  <div class="empty-state glass-card">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+      <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+    </svg>
+    <p>No work experience added yet</p>
+    <a href="<%= new_admin_experience_path %>" class="btn-accent">Add your first position</a>
+  </div>
+<% end %>

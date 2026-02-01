@@ -1,0 +1,158 @@
+<%# Admin Dashboard %>
+<% content_for :title, "Dashboard" %>
+
+<div class="page-header">
+  <h1>Dashboard</h1>
+  <p class="page-subtitle">Welcome back, <%= current_admin.name %>!</p>
+</div>
+
+<!-- Stats Cards -->
+<div class="stats-grid">
+  <div class="stat-card glass-card">
+    <div class="stat-icon messages">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+        <polyline points="22,6 12,13 2,6"/>
+      </svg>
+    </div>
+    <div class="stat-content">
+      <span class="stat-value"><%= @stats[:unread_messages] %></span>
+      <span class="stat-label">Unread Messages</span>
+    </div>
+    <a href="<%= admin_messages_path(filter: 'unread') %>" class="stat-link">View all →</a>
+  </div>
+  
+  <div class="stat-card glass-card">
+    <div class="stat-icon visitors">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+        <circle cx="9" cy="7" r="4"/>
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+      </svg>
+    </div>
+    <div class="stat-content">
+      <span class="stat-value"><%= @stats[:visitors_today] %></span>
+      <span class="stat-label">Visitors Today</span>
+    </div>
+    <span class="stat-meta"><%= @stats[:total_visitors] %> this month</span>
+  </div>
+  
+  <div class="stat-card glass-card">
+    <div class="stat-icon posts">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <polyline points="14 2 14 8 20 8"/>
+        <line x1="16" y1="13" x2="8" y2="13"/>
+        <line x1="16" y1="17" x2="8" y2="17"/>
+      </svg>
+    </div>
+    <div class="stat-content">
+      <span class="stat-value"><%= @stats[:published_posts] %></span>
+      <span class="stat-label">Published Posts</span>
+    </div>
+    <a href="<%= admin_posts_path %>" class="stat-link">Manage posts →</a>
+  </div>
+  
+  <div class="stat-card glass-card">
+    <div class="stat-icon projects">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+      </svg>
+    </div>
+    <div class="stat-content">
+      <span class="stat-value"><%= @stats[:published_projects] %></span>
+      <span class="stat-label">Published Projects</span>
+    </div>
+    <a href="<%= admin_projects_path %>" class="stat-link">Manage projects →</a>
+  </div>
+</div>
+
+<div class="dashboard-grid">
+  <!-- Recent Messages -->
+  <div class="dashboard-panel glass-card">
+    <div class="panel-header">
+      <h2>Recent Messages</h2>
+      <a href="<%= admin_messages_path %>" class="panel-link">View all</a>
+    </div>
+    <div class="panel-content">
+      <% if @recent_messages.any? %>
+        <ul class="message-list">
+          <% @recent_messages.each do |message| %>
+            <li class="message-item <%= 'unread' unless message.read? %>">
+              <a href="<%= admin_message_path(message) %>">
+                <div class="message-sender">
+                  <span class="sender-name"><%= message.name %></span>
+                  <span class="message-date"><%= message.short_date %></span>
+                </div>
+                <p class="message-preview"><%= message.preview %></p>
+              </a>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <div class="empty-panel">
+          <p>No messages yet</p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  
+  <!-- Top Pages -->
+  <div class="dashboard-panel glass-card">
+    <div class="panel-header">
+      <h2>Top Pages</h2>
+      <a href="<%= admin_analytics_path %>" class="panel-link">Analytics</a>
+    </div>
+    <div class="panel-content">
+      <% if @page_views.any? %>
+        <ul class="page-list">
+          <% @page_views.each do |page, views| %>
+            <li class="page-item">
+              <span class="page-path"><%= page %></span>
+              <span class="page-views"><%= views %> views</span>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <div class="empty-panel">
+          <p>No page views yet</p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="quick-actions">
+  <h2>Quick Actions</h2>
+  <div class="actions-grid">
+    <a href="<%= new_admin_project_path %>" class="action-card glass-card">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 5v14M5 12h14"/>
+      </svg>
+      <span>New Project</span>
+    </a>
+    <a href="<%= new_admin_post_path %>" class="action-card glass-card">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 5v14M5 12h14"/>
+      </svg>
+      <span>New Blog Post</span>
+    </a>
+    <a href="<%= admin_settings_path %>" class="action-card glass-card">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+      </svg>
+      <span>Settings</span>
+    </a>
+    <a href="/" target="_blank" class="action-card glass-card">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+        <polyline points="15 3 21 3 21 9"/>
+        <line x1="10" y1="14" x2="21" y2="3"/>
+      </svg>
+      <span>View Site</span>
+    </a>
+  </div>
+</div>

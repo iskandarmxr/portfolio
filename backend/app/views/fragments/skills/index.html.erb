@@ -1,0 +1,22 @@
+<%# Skills Section Fragment %>
+<div class="skills-container">
+  <% @skills_by_category.each do |category, skills| %>
+    <div class="skill-category">
+      <h3 class="category-title"><%= category.titleize %></h3>
+      <div class="skills-grid">
+        <% skills.each do |skill| %>
+          <div class="skill-item glass-card">
+            <% if skill.icon_class.present? %>
+              <i class="<%= skill.icon_class %> skill-icon"></i>
+            <% end %>
+            <span class="skill-name"><%= skill.name %></span>
+            <div class="skill-bar">
+              <div class="skill-progress" style="width: <%= skill.proficiency %>%"></div>
+            </div>
+            <span class="skill-level"><%= skill.proficiency %>%</span>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

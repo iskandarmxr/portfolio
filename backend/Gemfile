@@ -1,0 +1,66 @@
+source "https://rubygems.org"
+
+ruby ">= 3.2.0"
+
+# Rails framework
+gem "rails", "~> 7.1.0"
+
+# Database
+gem "pg", "~> 1.5"
+
+# Web server
+gem "puma", "~> 6.4"
+
+# Redis for ActionCable
+gem "redis", "~> 5.0"
+
+# Authentication
+gem "bcrypt", "~> 3.1"
+
+# Asset pipeline (for admin panel)
+gem "sprockets-rails"
+gem "importmap-rails"
+gem "turbo-rails"
+gem "stimulus-rails"
+
+# Rich text editor for blog
+gem "actiontext"
+
+# Image processing for uploads
+gem "image_processing", "~> 1.12"
+gem "active_storage_validations"
+
+# CORS for frontend requests
+gem "rack-cors"
+
+# Rate limiting
+gem "rack-attack"
+
+# Environment variables
+gem "dotenv-rails"
+
+# JSON serialization (for API responses if needed)
+gem "jbuilder"
+
+# Windows timezone data
+gem "tzinfo-data", platforms: %i[windows jruby]
+
+# Reduces boot times through caching
+gem "bootsnap", require: false
+
+group :development, :test do
+  gem "debug", platforms: %i[mri windows]
+  gem "rspec-rails"
+  gem "factory_bot_rails"
+  gem "faker"
+end
+
+group :development do
+  gem "web-console"
+  gem "error_highlight", ">= 0.4.0", platforms: [:ruby]
+end
+
+group :test do
+  gem "capybara"
+  gem "selenium-webdriver"
+end

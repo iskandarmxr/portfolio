@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Contact Me - Let's discuss your project and how I can help.">
+  <meta name="theme-color" content="#000000">
+  
+  <title>Contact | Portfolio</title>
+  
+  <!-- Theme initialization (prevents flash) -->
+  <script>
+    (function() {
+      var theme = localStorage.getItem('portfolio-frontend-theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="/assets/css/main.css">
+  
+  <!-- HTMX -->
+  <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <a href="/" class="nav-logo">
+      <span class="nav-logo-icon">P</span>
+      <span>Portfolio</span>
+    </a>
+    
+    <div class="nav-links">
+      <a href="/" class="nav-link">Home</a>
+      <a href="/projects" class="nav-link">Projects</a>
+      <a href="/about" class="nav-link">About</a>
+      <a href="/blog" class="nav-link">Blog</a>
+    </div>
+    
+    <a href="/contact" class="nav-cta">Let's Talk</a>
+    
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </button>
+  </nav>
+
+  <main class="main-content">
+    <!-- Page Hero -->
+    <section class="page-hero">
+      <div class="container">
+        <h1 class="heading-1">Let's Talk</h1>
+        <p>Have a project in mind? I'd love to hear about it.</p>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="section contact-section">
+      <div class="container">
+        <div class="contact-grid">
+          <!-- Contact Info - Dynamically loaded -->
+          <div id="contact-info"
+               hx-get="/fragments/contact-info"
+               hx-trigger="load, content-refresh-settings from:body"
+               hx-indicator="#loading"
+               class="contact-info">
+            <!-- Loading skeleton -->
+            <div class="skeleton skeleton-text" style="width: 40%;"></div>
+            <div class="skeleton skeleton-text" style="width: 80%; height: 2rem;"></div>
+            <div class="skeleton skeleton-text"></div>
+            <div class="skeleton skeleton-text" style="width: 60%;"></div>
+            <div style="margin-top: 1rem;">
+              <div class="skeleton" style="height: 40px; width: 200px;"></div>
+              <div class="skeleton" style="height: 40px; width: 200px; margin-top: 0.5rem;"></div>
+            </div>
+          </div>
+          
+          <!-- Contact Form -->
+          <div class="contact-form glass-card" id="contact-form-container">
+            <form id="contact-form"
+                  hx-post="/fragments/contact"
+                  hx-target="#contact-form-container"
+                  hx-swap="innerHTML">
+              <div class="form-group">
+                <label class="form-label">Project Type</label>
+                <div class="project-types">
+                  <label class="project-type">
+                    <input type="radio" name="project_type" value="freelance" style="display: none;">
+                    Freelance
+                  </label>
+                  <label class="project-type">
+                    <input type="radio" name="project_type" value="contract" style="display: none;">
+                    Contract
+                  </label>
+                  <label class="project-type">
+                    <input type="radio" name="project_type" value="full-time" style="display: none;">
+                    Full-time
+                  </label>
+                  <label class="project-type">
+                    <input type="radio" name="project_type" value="other" style="display: none;">
+                    Other
+                  </label>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label" for="name">Name *</label>
+                <input type="text" class="form-input" id="name" name="name" required placeholder="Your name">
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label" for="email">Email *</label>
+                <input type="email" class="form-input" id="email" name="email" required placeholder="your@email.com">
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label" for="subject">Subject</label>
+                <input type="text" class="form-input" id="subject" name="subject" placeholder="What's this about?">
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label" for="content">Message *</label>
+                <textarea class="form-textarea" id="content" name="content" required rows="5" placeholder="Tell me about your project..."></textarea>
+              </div>
+              
+              <button type="submit" class="btn-accent" style="width: 100%;">
+                <span>Send Message</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="22" y1="2" x2="11" y2="13"></line>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer Bar -->
+  <div class="footer-bar">
+    <div class="footer-left">
+      <div class="footer-status">
+        <span class="status-dot"></span>
+        <span>Open to work</span>
+      </div>
+    </div>
+    <div class="footer-right">
+      I typically respond within 24 hours
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/assets/js/app.js"></script>
+  <script>
+    // Project type selection
+    document.querySelectorAll('.project-type').forEach(type => {
+      type.addEventListener('click', () => {
+        document.querySelectorAll('.project-type').forEach(t => t.classList.remove('selected'));
+        type.classList.add('selected');
+        type.querySelector('input').checked = true;
+      });
+    });
+    
+    // Mobile nav toggle
+    document.getElementById('nav-toggle')?.addEventListener('click', () => {
+      document.getElementById('navbar').classList.toggle('mobile-open');
+    });
+  </script>
+</body>
+</html>

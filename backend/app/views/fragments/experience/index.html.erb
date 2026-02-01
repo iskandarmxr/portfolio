@@ -1,0 +1,83 @@
+<%# Experience Timeline Fragment %>
+<div class="experience-timeline">
+  <% @experiences.each_with_index do |experience, index| %>
+    <div class="timeline-item glass-card" 
+         hx-get="#"
+         hx-trigger="click"
+         hx-swap="none"
+         onclick="this.classList.toggle('expanded')">
+      <div class="timeline-marker">
+        <span class="marker-dot <%= 'current' if experience.current? %>"></span>
+        <% unless index == @experiences.length - 1 %>
+          <span class="marker-line"></span>
+        <% end %>
+      </div>
+      
+      <div class="timeline-content">
+        <div class="timeline-header">
+          <div class="timeline-info">
+            <h3 class="role-title"><%= experience.role %></h3>
+            <span class="company-name">
+              <% if experience.company_url.present? %>
+                <a href="<%= experience.company_url %>" target="_blank" rel="noopener"><%= experience.company %></a>
+              <% else %>
+                <%= experience.company %>
+              <% end %>
+            </span>
+          </div>
+          
+          <div class="timeline-meta">
+            <span class="date-range"><%= experience.date_range %></span>
+            <% if experience.duration.present? %>
+              <span class="duration"><%= experience.duration %></span>
+            <% end %>
+          </div>
+        </div>
+        
+        <% if experience.current? %>
+          <span class="current-badge">Current</span>
+        <% end %>
+        
+        <div class="timeline-details">
+          <% if experience.description.present? %>
+            <p class="description"><%= experience.description %></p>
+          <% end %>
+          
+          <% if experience.highlights.present? && experience.highlights.any? %>
+            <ul class="highlights">
+              <% experience.highlights.each do |highlight| %>
+                <li><%= highlight %></li>
+              <% end %>
+            </ul>
+          <% end %>
+          
+          <% if experience.location.present? %>
+            <span class="location">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+              <%= experience.location %>
+            </span>
+          <% end %>
+        </div>
+        
+        <button class="expand-toggle">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<% if @experiences.empty? %>
+  <div class="empty-state">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+      <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+    </svg>
+    <p>No experience entries yet</p>
+  </div>
+<% end %>

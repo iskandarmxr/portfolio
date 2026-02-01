@@ -1,0 +1,63 @@
+<%# Message Detail %>
+<% content_for :title, "Message from #{@message.name}" %>
+
+<div class="page-header">
+  <a href="<%= admin_messages_path %>" class="back-link">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="19" y1="12" x2="5" y2="12"/>
+      <polyline points="12 19 5 12 12 5"/>
+    </svg>
+    <span>Back to Messages</span>
+  </a>
+  <div class="header-actions">
+    <% if @message.read? %>
+      <%= button_to mark_unread_admin_message_path(@message), method: :patch, class: "btn-outline" do %>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+        </svg>
+        <span>Mark unread</span>
+      <% end %>
+    <% end %>
+    <%= button_to admin_message_path(@message), method: :delete, class: "btn-outline danger", data: { confirm: "Delete this message?" } do %>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="3 6 5 6 21 6"/>
+        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+      </svg>
+      <span>Delete</span>
+    <% end %>
+  </div>
+</div>
+
+<div class="message-detail glass-card">
+  <div class="message-header">
+    <div class="message-avatar">
+      <%= @message.name[0].upcase %>
+    </div>
+    <div class="message-meta">
+      <h2 class="sender-name"><%= @message.name %></h2>
+      <a href="mailto:<%= @message.email %>" class="sender-email"><%= @message.email %></a>
+      <span class="message-date"><%= @message.formatted_date %></span>
+    </div>
+  </div>
+  
+  <% if @message.subject.present? %>
+    <h3 class="message-subject"><%= @message.subject %></h3>
+  <% end %>
+  
+  <% if @message.project_type.present? %>
+    <span class="project-type-badge"><%= @message.project_type.titleize %></span>
+  <% end %>
+  
+  <div class="message-body">
+    <%= simple_format(@message.content) %>
+  </div>
+  
+  <div class="message-footer">
+    <a href="mailto:<%= @message.email %>?subject=Re: <%= @message.subject %>" class="btn-accent">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 10h10a8 8 0 0 1 8 8v2M3 10l6 6M3 10l6-6"/>
+      </svg>
+      <span>Reply via Email</span>
+    </a>
+  </div>
+</div>

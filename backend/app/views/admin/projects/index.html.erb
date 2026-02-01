@@ -1,0 +1,116 @@
+<%# Admin Projects List %>
+<% content_for :title, "Projects" %>
+
+<div class="page-header">
+  <div class="header-left">
+    <h1>Projects</h1>
+    <p class="page-subtitle"><%= @projects.count %> total projects</p>
+  </div>
+  <div class="header-actions">
+    <a href="<%= new_admin_project_path %>" class="btn-accent">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 5v14M5 12h14"/>
+      </svg>
+      <span>New Project</span>
+    </a>
+  </div>
+</div>
+
+<!-- Filters -->
+<div class="filters-bar glass-card">
+  <a href="<%= admin_projects_path %>" class="filter-btn <%= 'active' unless params[:status] %>">All</a>
+  <a href="<%= admin_projects_path(status: 'published') %>" class="filter-btn <%= 'active' if params[:status] == 'published' %>">Published</a>
+  <a href="<%= admin_projects_path(status: 'draft') %>" class="filter-btn <%= 'active' if params[:status] == 'draft' %>">Drafts</a>
+  <a href="<%= admin_projects_path(status: 'archived') %>" class="filter-btn <%= 'active' if params[:status] == 'archived' %>">Archived</a>
+</div>
+
+<!-- Projects Table -->
+<div class="data-table glass-card">
+  <table>
+    <thead>
+      <tr>
+        <th class="col-drag"></th>
+        <th class="col-image">Image</th>
+        <th>Title</th>
+        <th>Technologies</th>
+        <th>Status</th>
+        <th>Featured</th>
+        <th class="col-actions">Actions</th>
+      </tr>
+    </thead>
+    <tbody id="projects-sortable">
+      <% @projects.each do |project| %>
+        <tr data-id="<%= project.id %>">
+          <td class="col-drag">
+            <span class="drag-handle">⋮⋮</span>
+          </td>
+          <td class="col-image">
+            <% if project.image.attached? %>
+              <%= image_tag project.image.variant(resize_to_limit: [60, 60]), class: "table-thumb" %>
+            <% elsif project.image_url.present? %>
+              <img src="<%= project.image_url %>" class="table-thumb" alt="">
+            <% else %>
+              <div class="table-thumb placeholder">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <rect x="3" y="3" width="18" height="18" rx="2"/>
+                </svg>
+              </div>
+            <% end %>
+          </td>
+          <td>
+            <strong><%= project.title %></strong>
+            <% if project.short_description.present? %>
+              <span class="cell-subtitle"><%= truncate(project.short_description, length: 50) %></span>
+            <% end %>
+          </td>
+          <td>
+            <div class="tech-badges small">
+              <% project.technologies.first(3).each do |tech| %>
+                <span class="tech-badge"><%= tech.name %></span>
+              <% end %>
+              <% if project.technologies.count > 3 %>
+                <span class="tech-badge more">+<%= project.technologies.count - 3 %></span>
+              <% end %>
+            </div>
+          </td>
+          <td>
+            <span class="status-badge <%= project.status %>"><%= project.status.titleize %></span>
+          </td>
+          <td>
+            <%= button_to toggle_featured_admin_project_path(project), method: :patch, class: "toggle-btn #{project.featured? ? 'active' : ''}" do %>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="<%= project.featured? ? 'currentColor' : 'none' %>" stroke="currentColor" stroke-width="2">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+            <% end %>
+          </td>
+          <td class="col-actions">
+            <div class="action-buttons">
+              <a href="<%= edit_admin_project_path(project) %>" class="action-btn" title="Edit">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+              </a>
+              <%= button_to admin_project_path(project), method: :delete, class: "action-btn danger", title: "Delete", data: { confirm: "Are you sure you want to delete this project?" } do %>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="3 6 5 6 21 6"/>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                </svg>
+              <% end %>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  
+  <% if @projects.empty? %>
+    <div class="empty-table">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+      </svg>
+      <p>No projects yet</p>
+      <a href="<%= new_admin_project_path %>" class="btn-accent">Create your first project</a>
+    </div>
+  <% end %>
+</div>

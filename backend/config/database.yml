@@ -1,0 +1,26 @@
+# PostgreSQL Configuration
+# ===========================================
+
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  timeout: 5000
+
+development:
+  <<: *default
+  database: portfolio_development
+  host: <%= ENV.fetch("DB_HOST", "localhost") %>
+  username: <%= ENV.fetch("DB_USERNAME", "portfolio") %>
+  password: <%= ENV.fetch("DB_PASSWORD", "password") %>
+
+test:
+  <<: *default
+  database: portfolio_test
+  host: <%= ENV.fetch("DB_HOST", "localhost") %>
+  username: <%= ENV.fetch("DB_USERNAME", "portfolio") %>
+  password: <%= ENV.fetch("DB_PASSWORD", "password") %>
+
+production:
+  <<: *default
+  url: <%= ENV["DATABASE_URL"] %>

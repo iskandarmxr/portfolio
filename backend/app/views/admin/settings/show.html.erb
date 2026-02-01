@@ -1,0 +1,133 @@
+<%# Admin Settings %>
+<% content_for :title, "Settings" %>
+
+<div class="page-header">
+  <h1>Settings</h1>
+  <p class="page-subtitle">Configure your portfolio site</p>
+</div>
+
+<%= form_with url: admin_settings_path, method: :patch, class: "admin-form settings-form" do |f| %>
+  <div class="form-section glass-card">
+    <h3>Site Information</h3>
+    
+    <div class="form-row">
+      <div class="form-group">
+        <label for="settings_site_name">Site Name</label>
+        <input type="text" name="settings[site_name]" id="settings_site_name" 
+               value="<%= @settings['site_name'] %>" class="form-input">
+      </div>
+      
+      <div class="form-group">
+        <label for="settings_site_tagline">Tagline</label>
+        <input type="text" name="settings[site_tagline]" id="settings_site_tagline" 
+               value="<%= @settings['site_tagline'] %>" class="form-input"
+               placeholder="Full-Stack Developer">
+      </div>
+    </div>
+  </div>
+  
+  <div class="form-section glass-card">
+    <h3>Personal Information</h3>
+    
+    <div class="form-row">
+      <div class="form-group">
+        <label for="settings_owner_name">Your Name</label>
+        <input type="text" name="settings[owner_name]" id="settings_owner_name" 
+               value="<%= @settings['owner_name'] %>" class="form-input">
+      </div>
+      
+      <div class="form-group">
+        <label for="settings_owner_email">Email</label>
+        <input type="email" name="settings[owner_email]" id="settings_owner_email" 
+               value="<%= @settings['owner_email'] %>" class="form-input">
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label for="settings_owner_location">Location</label>
+      <input type="text" name="settings[owner_location]" id="settings_owner_location" 
+             value="<%= @settings['owner_location'] %>" class="form-input"
+             placeholder="San Francisco, CA">
+    </div>
+    
+    <div class="form-group">
+      <label for="settings_owner_bio">Bio</label>
+      <textarea name="settings[owner_bio]" id="settings_owner_bio" 
+                class="form-input" rows="4"><%= @settings['owner_bio'] %></textarea>
+    </div>
+    
+    <div class="form-group">
+      <label class="checkbox-label">
+        <!-- Hidden field sends "false" when checkbox is unchecked -->
+        <input type="hidden" name="settings[available_for_work]" value="false">
+        <input type="checkbox" name="settings[available_for_work]" value="true"
+               <%= 'checked' if @settings['available_for_work'] == true || @settings['available_for_work'] == 'true' %>>
+        <span>Available for work</span>
+      </label>
+      <small class="form-hint">Shows "Open to work" status on your site</small>
+    </div>
+  </div>
+  
+  <div class="form-section glass-card">
+    <h3>Social Links</h3>
+    
+    <div class="form-group">
+      <label for="settings_github_url">GitHub URL</label>
+      <input type="url" name="settings[github_url]" id="settings_github_url" 
+             value="<%= @settings['github_url'] %>" class="form-input"
+             placeholder="https://github.com/yourusername">
+    </div>
+    
+    <div class="form-group">
+      <label for="settings_linkedin_url">LinkedIn URL</label>
+      <input type="url" name="settings[linkedin_url]" id="settings_linkedin_url" 
+             value="<%= @settings['linkedin_url'] %>" class="form-input"
+             placeholder="https://linkedin.com/in/yourusername">
+    </div>
+    
+    <div class="form-group">
+      <label for="settings_twitter_url">Twitter/X URL</label>
+      <input type="url" name="settings[twitter_url]" id="settings_twitter_url" 
+             value="<%= @settings['twitter_url'] %>" class="form-input"
+             placeholder="https://twitter.com/yourusername">
+    </div>
+  </div>
+  
+  <div class="form-section glass-card">
+    <h3>Contact Page Content</h3>
+    <p class="form-section-hint">Customize the text displayed on your contact page</p>
+    
+    <div class="form-group">
+      <label for="settings_contact_heading">Page Heading</label>
+      <input type="text" name="settings[contact_heading]" id="settings_contact_heading" 
+             value="<%= @settings['contact_heading'] %>" class="form-input"
+             placeholder="Let's build something amazing together">
+    </div>
+    
+    <div class="form-group">
+      <label for="settings_contact_description">Description</label>
+      <textarea name="settings[contact_description]" id="settings_contact_description" 
+                class="form-input" rows="3"
+                placeholder="Whether you have a project idea, a question, or just want to say hello..."><%= @settings['contact_description'] %></textarea>
+    </div>
+    
+    <div class="form-group">
+      <label for="settings_contact_response_time">Response Time Text</label>
+      <input type="text" name="settings[contact_response_time]" id="settings_contact_response_time" 
+             value="<%= @settings['contact_response_time'] %>" class="form-input"
+             placeholder="I typically respond within 24 hours.">
+      <small class="form-hint">Displayed in the footer and contact form area</small>
+    </div>
+  </div>
+  
+  <div class="form-actions">
+    <button type="submit" class="btn-accent">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+        <polyline points="17 21 17 13 7 13 7 21"/>
+        <polyline points="7 3 7 8 15 8"/>
+      </svg>
+      <span>Save Settings</span>
+    </button>
+  </div>
+<% end %>

@@ -1,0 +1,61 @@
+<%# Single Post Fragment %>
+<article class="post-single">
+  <header class="post-header">
+    <a href="/blog" class="back-link" hx-get="/fragments/posts" hx-target="#post-content" hx-push-url="/blog">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="19" y1="12" x2="5" y2="12"/>
+        <polyline points="12 19 5 12 12 5"/>
+      </svg>
+      <span>Back to Blog</span>
+    </a>
+    
+    <div class="post-meta">
+      <span class="post-date"><%= @post.formatted_date %></span>
+      <% if @post.reading_time_minutes %>
+        <span class="reading-time"><%= @post.reading_time_minutes %> min read</span>
+      <% end %>
+      <span class="view-count"><%= number_with_delimiter(@post.view_count) %> views</span>
+    </div>
+    
+    <h1 class="post-title"><%= @post.title %></h1>
+    
+    <% if @post.tags.present? && @post.tags.any? %>
+      <div class="post-tags">
+        <% @post.tags.each do |tag| %>
+          <span class="tag-badge"><%= tag %></span>
+        <% end %>
+      </div>
+    <% end %>
+  </header>
+  
+  <% if @post.cover.attached? || @post.cover_image.present? %>
+    <div class="post-cover">
+      <% if @post.cover.attached? %>
+        <%= image_tag @post.cover, alt: @post.title %>
+      <% else %>
+        <img src="<%= @post.cover_image %>" alt="<%= @post.title %>">
+      <% end %>
+    </div>
+  <% end %>
+  
+  <div class="post-content prose">
+    <%= simple_format(@post.content) %>
+  </div>
+  
+  <% if @related_posts.any? %>
+    <aside class="related-posts">
+      <h3>Related Posts</h3>
+      <div class="related-grid">
+        <% @related_posts.each do |post| %>
+          <a href="/blog/<%= post.slug %>" class="related-card glass-card"
+             hx-get="/fragments/posts/<%= post.slug %>"
+             hx-target="#post-content"
+             hx-push-url="/blog/<%= post.slug %>">
+            <h4><%= post.title %></h4>
+            <span class="date"><%= post.formatted_date %></span>
+          </a>
+        <% end %>
+      </div>
+    </aside>
+  <% end %>
+</article>

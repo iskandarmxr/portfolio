@@ -1,0 +1,45 @@
+<%# Skill Form Partial %>
+<%= form_with model: [:admin, @skill], class: "admin-form compact" do |f| %>
+  <div class="form-section glass-card">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="skill_name">Skill Name *</label>
+        <%= f.text_field :name, class: "form-input", required: true, placeholder: "e.g., Ruby on Rails" %>
+      </div>
+      
+      <div class="form-group">
+        <label for="skill_category">Category *</label>
+        <%= f.select :category, Skill::CATEGORIES.map { |c| [c.titleize, c] }, { prompt: "Select category" }, class: "form-select", required: true %>
+      </div>
+    </div>
+    
+    <div class="form-row">
+      <div class="form-group">
+        <label for="skill_proficiency">Proficiency (%)</label>
+        <%= f.range_field :proficiency, min: 0, max: 100, step: 5, class: "form-range", id: "proficiency-slider" %>
+        <div class="range-value"><span id="proficiency-value"><%= @skill.proficiency || 80 %></span>%</div>
+      </div>
+      
+      <div class="form-group">
+        <label for="skill_icon_class">Icon Class (optional)</label>
+        <%= f.text_field :icon_class, class: "form-input", placeholder: "e.g., devicon-rails-plain" %>
+        <small class="form-hint">Use Devicon or similar icon classes</small>
+      </div>
+    </div>
+  </div>
+  
+  <div class="form-actions">
+    <a href="<%= admin_skills_path %>" class="btn-outline">Cancel</a>
+    <%= f.submit @skill.new_record? ? "Add Skill" : "Update Skill", class: "btn-accent" %>
+  </div>
+<% end %>
+
+<script>
+  const slider = document.getElementById('proficiency-slider');
+  const output = document.getElementById('proficiency-value');
+  if (slider && output) {
+    slider.addEventListener('input', () => {
+      output.textContent = slider.value;
+    });
+  }
+</script>

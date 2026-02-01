@@ -1,0 +1,115 @@
+<%# Admin Posts List %>
+<% content_for :title, "Blog Posts" %>
+
+<div class="page-header">
+  <div class="header-left">
+    <h1>Blog Posts</h1>
+    <p class="page-subtitle"><%= @posts.count %> total posts</p>
+  </div>
+  <div class="header-actions">
+    <a href="<%= new_admin_post_path %>" class="btn-accent">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 5v14M5 12h14"/>
+      </svg>
+      <span>New Post</span>
+    </a>
+  </div>
+</div>
+
+<!-- Filters -->
+<div class="filters-bar glass-card">
+  <a href="<%= admin_posts_path %>" class="filter-btn <%= 'active' unless params[:status] %>">All</a>
+  <a href="<%= admin_posts_path(status: 'published') %>" class="filter-btn <%= 'active' if params[:status] == 'published' %>">Published</a>
+  <a href="<%= admin_posts_path(status: 'draft') %>" class="filter-btn <%= 'active' if params[:status] == 'draft' %>">Drafts</a>
+</div>
+
+<!-- Posts Table -->
+<div class="data-table glass-card">
+  <table>
+    <thead>
+      <tr>
+        <th class="col-image">Cover</th>
+        <th>Title</th>
+        <th>Status</th>
+        <th>Published</th>
+        <th>Views</th>
+        <th class="col-actions">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @posts.each do |post| %>
+        <tr>
+          <td class="col-image">
+            <% if post.cover.attached? %>
+              <%= image_tag post.cover.variant(resize_to_limit: [60, 60]), class: "table-thumb" %>
+            <% elsif post.cover_image.present? %>
+              <img src="<%= post.cover_image %>" class="table-thumb" alt="">
+            <% else %>
+              <div class="table-thumb placeholder">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                </svg>
+              </div>
+            <% end %>
+          </td>
+          <td>
+            <strong><%= post.title %></strong>
+            <span class="cell-subtitle"><%= post.slug %></span>
+          </td>
+          <td>
+            <span class="status-badge <%= post.status %>"><%= post.status.titleize %></span>
+          </td>
+          <td>
+            <% if post.published_at %>
+              <%= post.published_at.strftime('%b %d, %Y') %>
+            <% else %>
+              <span class="text-muted">—</span>
+            <% end %>
+          </td>
+          <td><%= number_with_delimiter(post.view_count) %></td>
+          <td class="col-actions">
+            <div class="action-buttons">
+              <% if post.draft? %>
+                <%= button_to publish_admin_post_path(post), method: :patch, class: "action-btn", title: "Publish" do %>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 11 12 14 22 4"/>
+                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                  </svg>
+                <% end %>
+              <% else %>
+                <%= button_to unpublish_admin_post_path(post), method: :patch, class: "action-btn", title: "Unpublish" do %>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                  </svg>
+                <% end %>
+              <% end %>
+              <a href="<%= edit_admin_post_path(post) %>" class="action-btn" title="Edit">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+              </a>
+              <%= button_to admin_post_path(post), method: :delete, class: "action-btn danger", title: "Delete", data: { confirm: "Delete this post?" } do %>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="3 6 5 6 21 6"/>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                </svg>
+              <% end %>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  
+  <% if @posts.empty? %>
+    <div class="empty-table">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <polyline points="14 2 14 8 20 8"/>
+      </svg>
+      <p>No posts yet</p>
+      <a href="<%= new_admin_post_path %>" class="btn-accent">Write your first post</a>
+    </div>
+  <% end %>
+</div>

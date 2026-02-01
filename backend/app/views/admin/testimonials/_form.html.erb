@@ -1,0 +1,93 @@
+<%# Testimonial Form Partial %>
+<%= form_with model: [:admin, @testimonial], class: "admin-form" do |f| %>
+  <div class="form-grid">
+    <div class="form-main">
+      <div class="form-section glass-card">
+        <h3>Author Information</h3>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="testimonial_author_name">Author Name *</label>
+            <%= f.text_field :author_name, class: "form-input", required: true, placeholder: "e.g., John Smith" %>
+          </div>
+          
+          <div class="form-group">
+            <label for="testimonial_author_title">Title / Position</label>
+            <%= f.text_field :author_title, class: "form-input", placeholder: "e.g., CTO" %>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="testimonial_author_company">Company</label>
+          <%= f.text_field :author_company, class: "form-input", placeholder: "e.g., Tech Startup Inc." %>
+        </div>
+      </div>
+      
+      <div class="form-section glass-card">
+        <h3>Testimonial Content</h3>
+        
+        <div class="form-group">
+          <label for="testimonial_content">Testimonial *</label>
+          <%= f.text_area :content, class: "form-input", rows: 5, required: true, placeholder: "What did they say about you or your work?" %>
+        </div>
+        
+        <div class="form-group">
+          <label for="testimonial_rating">Rating *</label>
+          <div class="rating-selector">
+            <% (1..5).each do |star| %>
+              <label class="star-label">
+                <%= f.radio_button :rating, star, required: true %>
+                <span class="star" data-value="<%= star %>">★</span>
+              </label>
+            <% end %>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label class="checkbox-label">
+            <%= f.check_box :featured %>
+            <span>Feature this testimonial</span>
+          </label>
+          <small class="form-hint">Featured testimonials appear prominently on the homepage</small>
+        </div>
+      </div>
+    </div>
+    
+    <div class="form-sidebar">
+      <div class="form-section glass-card">
+        <h3>Author Photo</h3>
+        <div class="form-group">
+          <%= f.file_field :author_image, class: "form-file", accept: "image/*" %>
+          <small class="form-hint">Square image recommended (100x100px)</small>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="form-actions">
+    <a href="<%= admin_testimonials_path %>" class="btn-outline">Cancel</a>
+    <%= f.submit @testimonial.new_record? ? "Add Testimonial" : "Update Testimonial", class: "btn-accent" %>
+  </div>
+<% end %>
+
+<style>
+  .rating-selector {
+    display: flex;
+    gap: 0.5rem;
+  }
+  .star-label {
+    cursor: pointer;
+  }
+  .star-label input {
+    display: none;
+  }
+  .star {
+    font-size: 1.5rem;
+    color: var(--admin-border);
+    transition: color 0.2s;
+  }
+  .star-label input:checked ~ .star,
+  .star-label:hover .star {
+    color: #f59e0b;
+  }
+</style>

@@ -1,0 +1,153 @@
+<%# Project Form Partial %>
+<%= form_with model: [:admin, @project], class: "admin-form" do |f| %>
+  <div class="form-grid">
+    <div class="form-main">
+      <div class="form-section glass-card">
+        <h3>Basic Information</h3>
+        
+        <div class="form-group">
+          <label for="project_title">Title *</label>
+          <%= f.text_field :title, class: "form-input", required: true, placeholder: "Project name" %>
+        </div>
+        
+        <div class="form-group">
+          <label for="project_short_description">Short Description</label>
+          <%= f.text_area :short_description, class: "form-input", rows: 2, placeholder: "Brief summary (shown in cards)" %>
+        </div>
+        
+        <div class="form-group">
+          <label for="project_description">Full Description</label>
+          <%= f.text_area :description, class: "form-input", rows: 8, placeholder: "Detailed project description..." %>
+        </div>
+      </div>
+      
+      <div class="form-section glass-card">
+        <h3>Links</h3>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="project_live_url">Live URL</label>
+            <%= f.url_field :live_url, class: "form-input", placeholder: "https://example.com" %>
+          </div>
+          
+          <div class="form-group">
+            <label for="project_github_url">GitHub URL</label>
+            <%= f.url_field :github_url, class: "form-input", placeholder: "https://github.com/..." %>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="project_video_url">Video URL</label>
+          <%= f.url_field :video_url, class: "form-input", placeholder: "https://youtube.com/..." %>
+        </div>
+      </div>
+      
+      <div class="form-section glass-card">
+        <h3>Technologies</h3>
+        <div class="tech-selector">
+          <% Skill::CATEGORIES.each do |category| %>
+            <% skills = @skills.select { |s| s.category == category } %>
+            <% if skills.any? %>
+              <div class="tech-category">
+                <span class="category-label"><%= category.titleize %></span>
+                <div class="tech-options">
+                  <% skills.each do |skill| %>
+                    <label class="tech-option">
+                      <input type="checkbox" name="technology_ids[]" value="<%= skill.id %>"
+                             <%= 'checked' if @project.technology_ids.include?(skill.id) %>>
+                      <span><%= skill.name %></span>
+                    </label>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    
+    <div class="form-sidebar">
+      <div class="form-section glass-card">
+        <h3>Status</h3>
+        
+        <div class="form-group">
+          <label for="project_status">Publish Status</label>
+          <%= f.select :status, Project::STATUSES.map { |s| [s.titleize, s] }, {}, class: "form-select" %>
+        </div>
+        
+        <div class="form-group">
+          <label for="project_category">Category</label>
+          <%= f.select :category, Project::CATEGORIES, { include_blank: 'Select category' }, class: "form-select" %>
+        </div>
+        
+        <div class="form-group">
+          <label class="checkbox-label">
+            <%= f.check_box :featured %>
+            <span>Featured Project</span>
+          </label>
+          <small class="form-hint">Featured projects appear prominently on the homepage</small>
+        </div>
+      </div>
+      
+      <div class="form-section glass-card">
+        <h3>Card Appearance</h3>
+        <p class="form-section-hint">Customize the project card gradient</p>
+        
+        <div class="gradient-presets">
+          <% Project::GRADIENT_PRESETS.each do |name, colors| %>
+            <label class="gradient-preset" title="<%= name.titleize %>">
+              <input type="radio" name="gradient_preset" value="<%= name %>"
+                     data-start="<%= colors[:start] %>" data-end="<%= colors[:end] %>"
+                     onclick="setGradient('<%= colors[:start] %>', '<%= colors[:end] %>')">
+              <span class="gradient-swatch" style="background: linear-gradient(135deg, <%= colors[:start] %>, <%= colors[:end] %>);"></span>
+            </label>
+          <% end %>
+        </div>
+        
+        <div class="form-row" style="margin-top: 1rem;">
+          <div class="form-group">
+            <label for="project_gradient_start">Start Color</label>
+            <%= f.color_field :gradient_start, class: "form-color", value: @project.gradient_start || '#8B5CF6' %>
+          </div>
+          
+          <div class="form-group">
+            <label for="project_gradient_end">End Color</label>
+            <%= f.color_field :gradient_end, class: "form-color", value: @project.gradient_end || '#6366F1' %>
+          </div>
+        </div>
+        
+        <div class="gradient-preview" id="gradient-preview" style="background: linear-gradient(135deg, <%= @project.gradient_start || '#8B5CF6' %>, <%= @project.gradient_end || '#6366F1' %>);">
+          Preview
+        </div>
+      </div>
+      
+      <div class="form-section glass-card">
+        <h3>Image</h3>
+        
+        <div class="form-group">
+          <label for="project_image">Upload Image</label>
+          <%= f.file_field :image, class: "form-file", accept: "image/*" %>
+          <small class="form-hint">Recommended: 1200x800px</small>
+        </div>
+        
+        <% if @project.image.attached? %>
+          <div class="image-preview">
+            <%= image_tag @project.image.variant(resize_to_limit: [300, 200]) %>
+          </div>
+        <% end %>
+        
+        <div class="form-divider">or</div>
+        
+        <div class="form-group">
+          <label for="project_image_url">Image URL</label>
+          <%= f.url_field :image_url, class: "form-input", placeholder: "https://..." %>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="form-actions">
+    <a href="<%= admin_projects_path %>" class="btn-outline">Cancel</a>
+    <%= f.submit @project.new_record? ? "Create Project" : "Update Project", class: "btn-accent" %>
+  </div>
+<% end %>
